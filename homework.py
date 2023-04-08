@@ -15,7 +15,7 @@ class InfoMessage:
         self.calories = calories
 
     def get_message(self) -> str:
-
+        """Создание и отправка сообщения о результатах тренировки."""
         return (f'Тип тренировки: {self.training_type}; '
                 f'Длительность: {self.duration:.3f} ч.; '
                 f'Дистанция: {self.distance:.3f} км; '
@@ -47,7 +47,7 @@ class Training:
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        NotImplementedError
+        raise NotImplementedError
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
@@ -57,12 +57,11 @@ class Training:
         speed = self.get_mean_speed()
         calories = self.get_spent_calories()
 
-        Information = InfoMessage(training_type,
-                                  duration,
-                                  distance,
-                                  speed,
-                                  calories)
-        return Information
+        return InfoMessage(training_type,
+                           duration,
+                           distance,
+                           speed,
+                           calories)
 
 
 class Running(Training):
@@ -138,9 +137,12 @@ def read_package(workout_type: str, data: list[int]) -> Training:
         'RUN': Running,
         'WLK': SportsWalking,
     }
-
+    workout_type_list: list = []
     if workout_type not in commands:
-        raise ValueError('Неверный код тренировки')
+        for key in commands:
+            workout_type_list.append(key)
+        raise ValueError(f'Неверный код тренировки {workout_type}. '
+                         f'Ожидалось {" ".join(workout_type_list)}.')
     cmd = commands[workout_type]
     type_of_traning = cmd(*data)
     return type_of_traning
@@ -150,6 +152,7 @@ def main(training: Training) -> None:
     """Главная функция."""
     info = Training.show_training_info(training)
     print(info.get_message())
+    # Я не понимаю данного замечания :(
 
 
 if __name__ == '__main__':
