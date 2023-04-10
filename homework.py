@@ -139,10 +139,9 @@ def read_package(workout_type: str, data: list[int]) -> Training:
     }
     workout_type_list: list = []
     if workout_type not in commands:
-        for key in commands:
-            workout_type_list.append(key)
+        workout_type_list = " ".join(commands)
         raise ValueError(f'Неверный код тренировки {workout_type}. '
-                         f'Ожидалось {" ".join(workout_type_list)}.')
+                         f'Ожидалось {workout_type_list}.')
     cmd = commands[workout_type]
     type_of_traning = cmd(*data)
     return type_of_traning
@@ -150,9 +149,8 @@ def read_package(workout_type: str, data: list[int]) -> Training:
 
 def main(training: Training) -> None:
     """Главная функция."""
-    info = Training.show_training_info(training)
+    info = training.show_training_info()
     print(info.get_message())
-    # Я не понимаю данного замечания :(
 
 
 if __name__ == '__main__':
